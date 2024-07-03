@@ -34,19 +34,32 @@ def transcribe_file(folder):
     for item in os.listdir(folder): 
         print(os.path.join(folder,item))
         # subprocess.call(f"whisper {os.path.join(folder,item)} --language zh --model large --threads 8")
-        result = model.transcribe(os.path.join(folder,item),language="zh",fp16=False)
+        result = model.transcribe(os.path.join(folder,item),language="zh")
         for writer in writers:
             writer(result, item)  
     print(result)
 
 
-def delete_files(folder):
+def delete_files(folder,keyword):
     for items in os.listdir(folder):
-        print(os.path.join(folder,items))
-        os.remove(os.path.join(folder,items))
+        if keyword in items:
+            print(os.path.join(folder,items))
+            os.remove(os.path.join(folder,items))
 
-    
+
+def combine_files(folder):
+    output_folder = folder
+    for txt_file in os.listdir(output_folder):
+        if ".txt" in txt_file:
+            print(txt_file)
+            with open(output_folder + os.sep + txt_file,"r",encoding="UTF-8") as txt_file_content:
+                data += txt_file_content.read()
+    print(data)
+    with open(output_folder + os.sep +"summary.txt","w",encoding="UTF-8") as file:
+        file.write(data)
+
 if __name__ == "__main__":
-    # split_file(file_path,temp_folder)
+    split_file(file_path,output_folder)
     transcribe_file(output_folder)
-    # delete_files(temp_folder)
+    delete_files(output_folder,".WAV")
+    combine_files(output_folder)
