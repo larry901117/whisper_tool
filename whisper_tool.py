@@ -5,7 +5,9 @@ from whisper.utils import get_writer
 import configparser
 
 config = configparser.ConfigParser()
-config.read("setting.ini",encoding="UTF-8")
+setting_file = os.path.dirname(os.path.abspath(__file__))+os.path.sep+"setting.ini"
+print(setting_file)
+config.read(setting_file,encoding="UTF-8")
 
 file_path = config.get('input','filename')
 print(file_path)
